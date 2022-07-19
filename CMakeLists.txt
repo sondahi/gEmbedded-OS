@@ -20,4 +20,4 @@ ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME}
         COMMAND arm-none-eabi-objdump --disassemble ${PROJECT_NAME}.elf > ${PROJECT_NAME}.dump)
 
 ADD_SUBDIRECTORY(kernel)
-ADD_SUBDIRECTORY(user)
+#ADD_SUBDIRECTORY(user)

@@ -8,8 +8,6 @@
 
         .global memoryCopy
         .global memoryFill
-        .global setMSP
-        .global setPSP
     #else
         void memoryCopy(uint32_t sourceAddress, uint32_t destinationAddress, uint32_t blockSize);
     #endif

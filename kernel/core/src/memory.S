@@ -1,5 +1,6 @@
     .syntax unified
     .cpu cortex-m4
+    .fpu softvfp
     .thumb
 
     #include "memory.h"
@@ -24,17 +25,3 @@ memoryFill:
     b memoryFill
     memoryFillExit:
         bx lr
-
-    .section .text
-    .type setMSP, %function
-setMSP:
-    msr msp, r0
-    bx lr
-
-    .section .text
-    .type setPSP, %function
-setPSP:
-    msr psp, r0
-    bx lr
-
-    .end

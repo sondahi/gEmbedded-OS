@@ -1,7 +1,7 @@
-#ifndef MODE_H
-#define MODE_H
+#ifndef CORE_H
+#define CORE_H
 
-#include "common.h"
+    #include "common.h"
 
     #define FPU_ACTIVE          (1U<<2)
     #define FPU_NONACTIVE       (0<<2)
@@ -11,13 +11,17 @@
     #define THREAD_UNPRIVILEGED (1U<<0)
 
     #define SYSTEM_MODE         (FPU_ACTIVE|PSP_ACTIVE|THREAD_PRIVILEGED)
-    #define APPLICATION_MODE    (FPU_ACTIVE|PSP_ACTIVE|THREAD_UNPRIVILEGED)
+    #define USER_MODE           (FPU_ACTIVE|PSP_ACTIVE|THREAD_UNPRIVILEGED)
 
 
     #ifdef __ASSEMBLER__
         .global setMode
+        .global setMSP
+        .global setPSP
     #else
         void setMode(uint8_t coreMode);
+        void setMSP(uint32_t mspAddress);
+        void setPSP(uint32_t pspAddress);
     #endif
 
-#endif //MODE_H
+#endif //CORE_H
