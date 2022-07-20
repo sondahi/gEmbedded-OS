@@ -1,9 +1,5 @@
 #include "exception.h"
 
-// Default_Handler inc 1
-int dHand;
-int hFHand;
-
 static void hang(){
     while (1);
 }
@@ -12,7 +8,6 @@ void NMI_Handler(void ) {
     hang ();
 }
 void HardFault_Handler(void ){
-    hFHand = 1;
     hang();
 }
 

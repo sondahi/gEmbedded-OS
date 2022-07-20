@@ -15,10 +15,14 @@ char bssChar1;
 short bssShort;
 char bssChar2;
 
+void testBusFaultException(void );
+
 void test(void ){
 
-    SCB->SHCSR.memFaultEna = ENABLE;
-    SCB->SHCSR.busFaultEna = ENABLE;
-    SCB->SHCSR.usgFaultEna = ENABLE;
+    testBusFaultException();
 
+}
+
+void testBusFaultException(){
+    SCB->SHCSR.memFaultEna = DISABLE;
 }

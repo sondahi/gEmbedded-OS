@@ -56,10 +56,8 @@ Reset_Handler:
     .section .text
     .type Default_Handler, %function
 Default_Handler:
-    ldr r0, =dHand
-    ldr r1, [r0]
-    add r1, r1, #1
-    str r1, [r0]
+    mov r0,#5
+    add r0,r0,#1
     LoopDefault:
         nop
         b LoopDefault
