@@ -56,8 +56,6 @@ Reset_Handler:
     .section .text
     .type Default_Handler, %function
 Default_Handler:
-    mov r0,#5
-    add r0,r0,#1
     LoopDefault:
         nop
         b LoopDefault

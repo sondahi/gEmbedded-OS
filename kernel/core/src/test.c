@@ -15,14 +15,8 @@ char bssChar1;
 short bssShort;
 char bssChar2;
 
-void testBusFaultException(void );
 
 void test(void ){
 
-    testBusFaultException();
 
-}
-
-void testBusFaultException(){
-    SCB->SHCSR.memFaultEna = DISABLE;
 }
