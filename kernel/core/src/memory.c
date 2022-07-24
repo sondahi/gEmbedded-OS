@@ -33,9 +33,9 @@ __attribute__((naked)) void memoryFill(uintptr_t *sourceAddress, uint32_t blockS
 void allocateStack(uint32_t stackSize, struct stack_t *processStack){
     // total stack kontrol if begine throw exception
 
-    processStack->stackBegin = userStackPointer;
-    processStack->currentPointer = userStackPointer;
-    userStackPointer-=stackSize;
     processStack->stackEnd = userStackPointer;
+    processStack->currentPointer = (uintptr_t *) processStack->stackEnd;
+    userStackPointer-=stackSize;
+    processStack->stackBegin = userStackPointer;
 
 }

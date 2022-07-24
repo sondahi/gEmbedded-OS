@@ -12,7 +12,7 @@
 
         struct stack_t{
             uintptr_t stackBegin;
-            uintptr_t currentPointer;
+            uintptr_t volatile *currentPointer;
             uintptr_t stackEnd;
         };
 

@@ -3,68 +3,71 @@
 
 static struct process_t *currentProcess = 0;
 
-static struct process_t kernelProcess;
-static struct process_t mainProcess;
+static struct process_t runnerTestProcess;
+static struct process_t runnerProcess1;
+static struct process_t runnerProcess2;
 
+extern void test(void );
 extern void runner1(void );
 extern void runner2(void );
 
 #define DUMMY_XPSR (0x01000000U)
 
- void initabc(void ){
-    volatile uintptr_t *ptr;
-
-    ptr = (uintptr_t *) kernelProcess.processStack.currentPointer;
-    ptr--;
-    *ptr = DUMMY_XPSR;
-    ptr--;
-    *ptr = kernelProcess.function; // pc
-    ptr--;
-    *ptr = 0xFFFFFFFD; // lr
-    for (int i = 0; i < 13; ++i) {
-        ptr--;
-        *ptr = 0x0;
-    }
-    kernelProcess.processStack.currentPointer = (uintptr_t) ptr;
-
-    ptr = (uintptr_t *) mainProcess.processStack.currentPointer;
-    ptr--;
-    *ptr = DUMMY_XPSR;
-    ptr--;
-    *ptr = mainProcess.function; // pc
-    ptr--;
-    *ptr = 0xFFFFFFFD; // lr
-    for (int i = 0; i < 13; ++i) {
-        ptr--;
-        *ptr = 0x0;
-    }
-    mainProcess.processStack.currentPointer = (uintptr_t) ptr;
-}
-
 void initProcessContext(void ){
 
-    kernelProcess.processId = 1;
-    allocateStack (1024, &kernelProcess.processStack);
-    kernelProcess.function = (uintptr_t ) runner1;
+    runnerTestProcess.processId = 0;
+    allocateStack (1024, &runnerTestProcess.processStack);
+    runnerTestProcess.function = (uintptr_t ) test;
+    runnerTestProcess.processStack.currentPointer--;
+    * runnerTestProcess.processStack.currentPointer-- = DUMMY_XPSR;
+    * runnerTestProcess.processStack.currentPointer-- = runnerTestProcess.function;
+    * runnerTestProcess.processStack.currentPointer-- = 0xFFFFFFED;
+    for (int i = 0; i <13 ; ++i) {
+        * runnerTestProcess.processStack.currentPointer-- = 0x0;
+    }
 
-    mainProcess.processId = 2;
-    allocateStack (1024, &mainProcess.processStack);
-    mainProcess.function=(uintptr_t ) runner2;
+    runnerProcess1.processId = 1;
+    allocateStack (1024, &runnerProcess1.processStack);
+    runnerProcess1.function = (uintptr_t ) runner1;
+    runnerProcess1.processStack.currentPointer--;
+    * runnerProcess1.processStack.currentPointer-- = DUMMY_XPSR;
+    * runnerProcess1.processStack.currentPointer-- = runnerProcess1.function;
+    * runnerProcess1.processStack.currentPointer-- = 0xFFFFFFED;
+    for (int i = 0; i <13 ; ++i) {
+        * runnerProcess1.processStack.currentPointer-- = 0x0;
+    }
 
-    kernelProcess.previous = &mainProcess;
-    kernelProcess.next = &mainProcess;
+    runnerProcess2.processId = 2;
+    allocateStack (1024, &runnerProcess2.processStack);
+    runnerProcess2.function=(uintptr_t ) runner2;
+    runnerProcess2.processStack.currentPointer--;
+    * runnerProcess2.processStack.currentPointer-- = DUMMY_XPSR;
+    * runnerProcess2.processStack.currentPointer-- = runnerProcess2.function;
+    * runnerProcess2.processStack.currentPointer-- = 0xFFFFFFED;
+    for (int i = 0; i <13 ; ++i) {
+        * runnerProcess2.processStack.currentPointer-- = 0x0;
+    }
 
-    mainProcess.previous = &kernelProcess;
-    mainProcess.next = &kernelProcess;
+    runnerTestProcess.previous = &runnerProcess2;
+    runnerTestProcess.next = &runnerProcess1;
 
-    currentProcess = &kernelProcess;
+    runnerProcess1.previous = &runnerTestProcess;
+    runnerProcess1.next = &runnerProcess2;
 
-    //initabc();
+    runnerProcess2.previous = &runnerProcess1;
+    runnerProcess2.next = &runnerTestProcess;
 
 
+    currentProcess = &runnerTestProcess;
 
+}
+
+void SysTick_Handler(void ){
+    SCB->ICSR.pendingSVSet_rw = HIGH;
 }
 
 void PendSV_Handler(void ){
+
+
     currentProcess = currentProcess->next;
 }

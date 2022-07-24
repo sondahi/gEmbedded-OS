@@ -33,10 +33,7 @@ Reset_Handler:
     ldr r0, =_eMSP
     bl setMSP
 
-    ldr r0, =_ePSP
-    bl setPSP
-
-    mov r0, #SYSTEM_MODE
+    mov r0, #KERNEL_MODE
     bl setMode
 
     ldr r0, =_eROM
@@ -52,6 +49,9 @@ Reset_Handler:
     bl memoryFill
 
     bl initSystem
+
+    ldr r0, =_ePSP // points to main function
+    bl setPSP
 
     mov r0, #USER_MODE
     bl setMode

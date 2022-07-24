@@ -15,26 +15,30 @@ char bssChar1;
 short bssShort;
 char bssChar2;
 
-int pendSV = 0;
+int volatile pendSV = 0;
 
+void test(void ){
+
+    __asm__ volatile ("svc #0");
+
+    while (1){
+        pendSV = 0;
+    }
+
+}
 
 void runner1(void ){
 
     while (1){
-        ++pendSV;
+        pendSV = 1;
     }
 
 }
 
 void runner2(void ){
     while (1){
-        --pendSV;
+        pendSV = 2;
     }
 
 }
 
-void test(void ){
-
-    __asm__ volatile ("svc #0");
-
-}

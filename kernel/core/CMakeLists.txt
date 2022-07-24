@@ -5,5 +5,4 @@ TARGET_SOURCES(${PROJECT_NAME} PRIVATE
         src/exception.c
         src/memory.c
         src/process.c
-        src/system.c
-        src/time.c)
+        src/system.c)
