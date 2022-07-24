@@ -7,7 +7,7 @@ MEMORY
 }
 
 _eMSP = ORIGIN(SRAM) + LENGTH(SRAM);
-_lMSP = 8K;
+_lMSP = 1K;
 _bMSP = _eMSP - _lMSP;
 
 _ePSP = _bMSP;

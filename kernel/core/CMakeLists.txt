@@ -1,10 +1,9 @@
-TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PRIVATE include)
+TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PRIVATE inc)
 
 TARGET_SOURCES(${PROJECT_NAME} PRIVATE
         src/core.S
         src/exception.c
-        src/memory.S
+        src/memory.c
         src/process.c
         src/system.c
-        src/time.c
-        src/test.c)
+        src/time.c)

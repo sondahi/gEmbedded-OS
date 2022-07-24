@@ -1,3 +1,3 @@
 ADD_SUBDIRECTORY(core)
 #ADD_SUBDIRECTORY(driver)
-#ADD_SUBDIRECTORY(userinterface)
+ADD_SUBDIRECTORY(userinterface)

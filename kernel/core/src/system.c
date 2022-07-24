@@ -1,8 +1,9 @@
 #include "system.h"
 #include "exception.h"
 #include "time.h"
+#include "process.h"
 
-void systemInit(void ){
-    initFaults();
-    initSystemTimer();
+void initSystem(void ){
+    initExceptions();
+    initProcessContext();
 }
