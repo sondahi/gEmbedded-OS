@@ -9,7 +9,6 @@
         .global memoryCopy
         .global memoryFill
     #else
-
         struct stack_t{
             uintptr_t stackBegin;
             uintptr_t volatile *currentPointer;

@@ -21,9 +21,10 @@ void initProcessContext(void ){
     runnerTestProcess.processStack.currentPointer--;
     * runnerTestProcess.processStack.currentPointer-- = DUMMY_XPSR;
     * runnerTestProcess.processStack.currentPointer-- = runnerTestProcess.function;
-    * runnerTestProcess.processStack.currentPointer-- = 0xFFFFFFED;
+    * runnerTestProcess.processStack.currentPointer = 0xFFFFFFFD;
     for (int i = 0; i <13 ; ++i) {
-        * runnerTestProcess.processStack.currentPointer-- = 0x0;
+        runnerTestProcess.processStack.currentPointer--;
+        * runnerTestProcess.processStack.currentPointer = 0x0;
     }
 
     runnerProcess1.processId = 1;
@@ -32,9 +33,10 @@ void initProcessContext(void ){
     runnerProcess1.processStack.currentPointer--;
     * runnerProcess1.processStack.currentPointer-- = DUMMY_XPSR;
     * runnerProcess1.processStack.currentPointer-- = runnerProcess1.function;
-    * runnerProcess1.processStack.currentPointer-- = 0xFFFFFFED;
+    * runnerProcess1.processStack.currentPointer = 0xFFFFFFFD;
     for (int i = 0; i <13 ; ++i) {
-        * runnerProcess1.processStack.currentPointer-- = 0x0;
+        runnerProcess1.processStack.currentPointer--;
+        * runnerProcess1.processStack.currentPointer = 0x0;
     }
 
     runnerProcess2.processId = 2;
@@ -43,9 +45,10 @@ void initProcessContext(void ){
     runnerProcess2.processStack.currentPointer--;
     * runnerProcess2.processStack.currentPointer-- = DUMMY_XPSR;
     * runnerProcess2.processStack.currentPointer-- = runnerProcess2.function;
-    * runnerProcess2.processStack.currentPointer-- = 0xFFFFFFED;
+    * runnerProcess2.processStack.currentPointer = 0xFFFFFFFD;
     for (int i = 0; i <13 ; ++i) {
-        * runnerProcess2.processStack.currentPointer-- = 0x0;
+        runnerProcess2.processStack.currentPointer--;
+        * runnerProcess2.processStack.currentPointer = 0x0;
     }
 
     runnerTestProcess.previous = &runnerProcess2;
@@ -62,12 +65,21 @@ void initProcessContext(void ){
 
 }
 
+void startProcess(void ){
+    __asm__ volatile ("svc 0");
+}
+
+void SVC_Handler(void ){
+    ST->STK_CTRL.enable_rw = HIGH;
+}
+
 void SysTick_Handler(void ){
     SCB->ICSR.pendingSVSet_rw = HIGH;
 }
 
 void PendSV_Handler(void ){
-
-
+    currentProcess->processStack.currentPointer = saveContext();
     currentProcess = currentProcess->next;
+    retrieveContext (currentProcess->processStack.currentPointer);
 }
+

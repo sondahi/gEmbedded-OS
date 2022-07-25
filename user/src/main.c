@@ -19,8 +19,6 @@ int volatile pendSV = 0;
 
 void test(void ){
 
-    __asm__ volatile ("svc #0");
-
     while (1){
         pendSV = 0;
     }
@@ -36,6 +34,7 @@ void runner1(void ){
 }
 
 void runner2(void ){
+
     while (1){
         pendSV = 2;
     }

@@ -5,14 +5,27 @@
 
     #include "core.h"
     #include "memory.h"
+    #include "process.h"
 
     .global Reset_Handler
     .global Default_Handler
 
     .section .text
+    .type setMode, %function
+setMode:
+    msr control, r0
+    bx lr
+
+    .section .text
     .type setMSP, %function
 setMSP:
     msr msp, r0
+    bx lr
+
+    .section .text
+    .type getMSP, %function
+getMSP:
+    mrs r0, msp
     bx lr
 
     .section .text
@@ -22,9 +35,9 @@ setPSP:
     bx lr
 
     .section .text
-    .type setMode, %function
-setMode:
-    msr control, r0
+    .type getPSP, %function
+getPSP:
+    mrs r0, psp
     bx lr
 
     .section .text
@@ -50,13 +63,14 @@ Reset_Handler:
 
     bl initSystem
 
-    ldr r0, =_ePSP // points to main function
+    ldr r0, =_ePSP // points to main stack
     bl setPSP
 
     mov r0, #USER_MODE
     bl setMode
 
-    bl test
+    bl startProcess
+
     LoopReset:
         b LoopReset
 
