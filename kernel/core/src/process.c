@@ -51,13 +51,13 @@ void initProcessContext(void ){
         * runnerProcess2.processStack.currentPointer = 0x0;
     }
 
-    runnerTestProcess.previous = &runnerProcess2;
+    //runnerTestProcess.previous = &runnerProcess2;
     runnerTestProcess.next = &runnerProcess1;
 
-    runnerProcess1.previous = &runnerTestProcess;
+    //runnerProcess1.previous = &runnerTestProcess;
     runnerProcess1.next = &runnerProcess2;
 
-    runnerProcess2.previous = &runnerProcess1;
+    //runnerProcess2.previous = &runnerProcess1;
     runnerProcess2.next = &runnerTestProcess;
 
 

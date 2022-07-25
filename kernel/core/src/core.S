@@ -71,6 +71,8 @@ Reset_Handler:
 
     bl startProcess
 
+    bl test
+
     LoopReset:
         b LoopReset
 

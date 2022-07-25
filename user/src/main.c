@@ -28,7 +28,7 @@ void test(void ){
 void runner1(void ){
 
     while (1){
-        pendSV = 1;
+        ++pendSV ;
     }
 
 }
@@ -36,7 +36,7 @@ void runner1(void ){
 void runner2(void ){
 
     while (1){
-        pendSV = 2;
+        --pendSV;
     }
 
 }

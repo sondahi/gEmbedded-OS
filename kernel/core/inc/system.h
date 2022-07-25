@@ -141,7 +141,7 @@
         #define SEC                             (AHB_CLOCK_SPEED)
         #define MIL_SEC                         (SEC / 1000U)
         #define MIC_SEC                         (MIL_SEC / 1000U)
-        #define DEFAULT_PROCESS_SWITCH          ((SEC) - (1U))
+        #define DEFAULT_PROCESS_SWITCH          ((MIL_SEC) - (1U))
 
         #define CLOCK_SOURCE_AHB                (0X1U)
         #define CLOCK_SOURCE_AHB8               (0X0)
