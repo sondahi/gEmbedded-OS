@@ -21,6 +21,7 @@
         #define EXCEPTION_RETURN    (0xFFFFFFFDU)
 
         void configureProcessContext(void );
+        void createProcess (struct process_t *,void (* processFunction)(void ), uint32_t stackSize);
         void startProcess(void );
         uintptr_t saveContext();
         uintptr_t retrieveContext(uintptr_t currentStack);

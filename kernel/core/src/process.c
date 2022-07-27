@@ -1,16 +1,11 @@
 #include "process.h"
 #include "system.h"
+#include "core.h"
 
 static struct process_t *currentProcess = 0;
 
 static struct process_t processTest;
-static struct process_t process1;
-static struct process_t process2;
-
 extern void test(void );
-extern void runner1(void );
-extern void runner2(void );
-
 
 void createProcess(struct process_t * process, void (* processFunction)(void ), uint32_t stackSize){
     static uint8_t processId = 0;
@@ -23,29 +18,30 @@ void createProcess(struct process_t * process, void (* processFunction)(void ), 
         process->processId = ++processId;
         process->function = (uintptr_t ) processFunction;
         uintptr_t volatile *stackPointer = (uintptr_t *) process->processStack.currentStack;
-        stackPointer--;
         *stackPointer-- = DUMMY_XPSR;
         *stackPointer-- = process->function;
         *stackPointer = EXCEPTION_RETURN;
         for (int i = 0; i <13 ; ++i) {
-            stackPointer--;
-            * stackPointer = 0x0;
+            * --stackPointer = 0x0;
         }
         process->processStack.currentStack = (uintptr_t ) stackPointer;
     }
+
+    process->next = currentProcess->next;
+    currentProcess->next = process;
 
 }
 
 void configureProcessContext(void ){
 
     createProcess (&processTest,test,1024);
-    createProcess (&process1,runner1,1024);
-    createProcess (&process2,runner2,1024);
 
-    processTest.next = &process1;
-    process1.next = &process2;
-    process2.next = &processTest;
+
+    processTest.next = &processTest;
+    processTest.previous = &processTest;
     currentProcess = &processTest;
+
+    setPSP (currentProcess->processStack.currentStack);
 
 }
 

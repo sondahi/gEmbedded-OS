@@ -2,6 +2,7 @@
 #include "system.h"
 #include "memory.h"
 #include "exception.h"
+#include "process.h"
 
 // dataCopy
 int dataInt = 1;
@@ -15,14 +16,10 @@ char bssChar1;
 short bssShort;
 char bssChar2;
 
+static struct process_t process1;
+static struct process_t process2;
+
 int volatile pendSV = 0;
-
-void test(void ){
-
-    while (1){
-        pendSV = 0;
-    }
-}
 
 void runner1(void ){
 
@@ -39,4 +36,16 @@ void runner2(void ){
     }
 
 }
+
+void test(void ){
+
+    createProcess (&process1,runner1,1024);
+    createProcess (&process2,runner2,1024);
+
+    while (1){
+        pendSV = 0;
+    }
+}
+
+
 

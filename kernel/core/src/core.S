@@ -63,9 +63,6 @@ Reset_Handler:
 
     bl configureSystem
 
-    ldr r0, =_ePSP // points to main stack
-    bl setPSP
-
     mov r0, #USER_MODE
     bl setMode
 
@@ -83,7 +80,7 @@ Default_Handler:
         nop
         b LoopDefault
 
-    .section .isr_vector,"a",%progbits
+    .section .vector_table,"a",%progbits
     .type Vector_Table, %object
 Vector_Table:
     .word  0x00000000

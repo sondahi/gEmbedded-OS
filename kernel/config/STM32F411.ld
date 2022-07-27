@@ -18,7 +18,7 @@ SECTIONS
 {
     .ROM :
     {
-        *(.isr_vector)
+        *(.vector_table)
         *(.text)
             *(.text.*)
         *(.rodata)

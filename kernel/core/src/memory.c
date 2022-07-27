@@ -16,6 +16,7 @@ MEMORY_STATUS allocateStack(uint32_t stackSize, struct stack_t *processStack){
         processStack->currentStack = currentStack;
         currentStack-=stackSize;
         processStack->stackBegin = currentStack;
+        currentStack-=4;
         return MEMORY_SUCCESS;
     }
 
