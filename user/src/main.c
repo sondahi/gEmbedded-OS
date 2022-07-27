@@ -22,7 +22,6 @@ void test(void ){
     while (1){
         pendSV = 0;
     }
-
 }
 
 void runner1(void ){

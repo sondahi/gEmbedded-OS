@@ -3,65 +3,49 @@
 
 static struct process_t *currentProcess = 0;
 
-static struct process_t runnerTestProcess;
-static struct process_t runnerProcess1;
-static struct process_t runnerProcess2;
+static struct process_t processTest;
+static struct process_t process1;
+static struct process_t process2;
 
 extern void test(void );
 extern void runner1(void );
 extern void runner2(void );
 
-#define DUMMY_XPSR (0x01000000U)
 
-void initProcessContext(void ){
+void createProcess(struct process_t * process, void (* processFunction)(void ), uint32_t stackSize){
+    static uint8_t processId = 0;
 
-    runnerTestProcess.processId = 0;
-    allocateStack (1024, &runnerTestProcess.processStack);
-    runnerTestProcess.function = (uintptr_t ) test;
-    runnerTestProcess.processStack.currentPointer--;
-    * runnerTestProcess.processStack.currentPointer-- = DUMMY_XPSR;
-    * runnerTestProcess.processStack.currentPointer-- = runnerTestProcess.function;
-    * runnerTestProcess.processStack.currentPointer = 0xFFFFFFFD;
-    for (int i = 0; i <13 ; ++i) {
-        runnerTestProcess.processStack.currentPointer--;
-        * runnerTestProcess.processStack.currentPointer = 0x0;
+    MEMORY_STATUS status = allocateStack (stackSize, &process->processStack);
+    if(status != MEMORY_SUCCESS){
+        //return status;
+        return;
+    } else{
+        process->processId = ++processId;
+        process->function = (uintptr_t ) processFunction;
+        uintptr_t volatile *stackPointer = (uintptr_t *) process->processStack.currentStack;
+        stackPointer--;
+        *stackPointer-- = DUMMY_XPSR;
+        *stackPointer-- = process->function;
+        *stackPointer = EXCEPTION_RETURN;
+        for (int i = 0; i <13 ; ++i) {
+            stackPointer--;
+            * stackPointer = 0x0;
+        }
+        process->processStack.currentStack = (uintptr_t ) stackPointer;
     }
 
-    runnerProcess1.processId = 1;
-    allocateStack (1024, &runnerProcess1.processStack);
-    runnerProcess1.function = (uintptr_t ) runner1;
-    runnerProcess1.processStack.currentPointer--;
-    * runnerProcess1.processStack.currentPointer-- = DUMMY_XPSR;
-    * runnerProcess1.processStack.currentPointer-- = runnerProcess1.function;
-    * runnerProcess1.processStack.currentPointer = 0xFFFFFFFD;
-    for (int i = 0; i <13 ; ++i) {
-        runnerProcess1.processStack.currentPointer--;
-        * runnerProcess1.processStack.currentPointer = 0x0;
-    }
+}
 
-    runnerProcess2.processId = 2;
-    allocateStack (1024, &runnerProcess2.processStack);
-    runnerProcess2.function=(uintptr_t ) runner2;
-    runnerProcess2.processStack.currentPointer--;
-    * runnerProcess2.processStack.currentPointer-- = DUMMY_XPSR;
-    * runnerProcess2.processStack.currentPointer-- = runnerProcess2.function;
-    * runnerProcess2.processStack.currentPointer = 0xFFFFFFFD;
-    for (int i = 0; i <13 ; ++i) {
-        runnerProcess2.processStack.currentPointer--;
-        * runnerProcess2.processStack.currentPointer = 0x0;
-    }
+void configureProcessContext(void ){
 
-    //runnerTestProcess.previous = &runnerProcess2;
-    runnerTestProcess.next = &runnerProcess1;
+    createProcess (&processTest,test,1024);
+    createProcess (&process1,runner1,1024);
+    createProcess (&process2,runner2,1024);
 
-    //runnerProcess1.previous = &runnerTestProcess;
-    runnerProcess1.next = &runnerProcess2;
-
-    //runnerProcess2.previous = &runnerProcess1;
-    runnerProcess2.next = &runnerTestProcess;
-
-
-    currentProcess = &runnerTestProcess;
+    processTest.next = &process1;
+    process1.next = &process2;
+    process2.next = &processTest;
+    currentProcess = &processTest;
 
 }
 
@@ -70,7 +54,8 @@ void startProcess(void ){
 }
 
 void SVC_Handler(void ){
-    ST->STK_CTRL.enable_rw = HIGH;
+    if(!ST->STK_CTRL.enable_rw)
+        ST->STK_CTRL.enable_rw = HIGH;
 }
 
 void SysTick_Handler(void ){
@@ -78,8 +63,7 @@ void SysTick_Handler(void ){
 }
 
 void PendSV_Handler(void ){
-    currentProcess->processStack.currentPointer = saveContext();
+    currentProcess->processStack.currentStack = saveContext();
     currentProcess = currentProcess->next;
-    retrieveContext (currentProcess->processStack.currentPointer);
+    currentProcess->processStack.currentStack = retrieveContext (currentProcess->processStack.currentStack);
 }
-

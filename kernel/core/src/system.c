@@ -1,7 +1,7 @@
 #include "exception.h"
 #include "process.h"
 
-void initSystem(void ){
-    initExceptions();
-    initProcessContext();
+void configureSystem(void ){
+    configureExceptions();
+    configureProcessContext();
 }

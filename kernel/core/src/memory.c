@@ -3,16 +3,20 @@
 extern uint32_t _ePSP;
 extern uint32_t _bPSP;
 
-uint32_t static const endOfUserStack = (uint32_t)&_ePSP;
-uint32_t static userStackPointer = endOfUserStack;
-uint32_t static const beginOfUserStack = (uint32_t)&_bPSP;
+uint32_t static const endOfStack = (uint32_t)&_ePSP;
+uint32_t static currentStack = endOfStack;
+uint32_t static const beginOfStack = (uint32_t)&_bPSP;
 
-void allocateStack(uint32_t stackSize, struct stack_t *processStack){
-    // total stack kontrol if begine throw exception
+MEMORY_STATUS allocateStack(uint32_t stackSize, struct stack_t *processStack){
 
-    processStack->stackEnd = userStackPointer;
-    processStack->currentPointer = (uintptr_t *) processStack->stackEnd;
-    userStackPointer-=stackSize;
-    processStack->stackBegin = userStackPointer;
+    if((currentStack - stackSize) < beginOfStack){
+        return STACK_UNAVAILABLE;
+    } else {
+        processStack->stackEnd = currentStack;
+        processStack->currentStack = currentStack;
+        currentStack-=stackSize;
+        processStack->stackBegin = currentStack;
+        return MEMORY_SUCCESS;
+    }
 
 }

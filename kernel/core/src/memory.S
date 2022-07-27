@@ -1,5 +1,5 @@
     .syntax unified
-    .cpu cortex-m4
+    .cpu    cortex-m4
     .fpu softvfp
     .thumb
 
@@ -9,9 +9,9 @@
     .type memoryCopy, %function
 memoryCopy:
      cbz r2, memoryCopyExit
-     sub r2, r2, #0x01
-     ldrb r3, [r0,r2]
-     strb r3, [r1,r2]
+     sub r2, r2, #0x04
+     ldr r3, [r0,r2]
+     str r3, [r1,r2]
      b memoryCopy
      memoryCopyExit:
         bx lr
@@ -20,8 +20,8 @@ memoryCopy:
     .type memoryFill, %function
 memoryFill:
      cbz r1, memoryFillExit
-     sub r1, r1, #0x01
-     strb r2, [r0,r1]
+     sub r1, r1, #0x04
+     str r2, [r0,r1]
      b memoryFill
      memoryFillExit:
         bx lr

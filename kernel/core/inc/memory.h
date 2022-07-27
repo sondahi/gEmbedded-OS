@@ -9,15 +9,21 @@
         .global memoryCopy
         .global memoryFill
     #else
+        typedef enum MEMORY_STATUS_t{
+            MEMORY_SUCCESS = 0,
+            STACK_UNAVAILABLE = 1,
+            HEAP_UNAVAILABLE = 2
+        } MEMORY_STATUS;
+
         struct stack_t{
             uintptr_t stackBegin;
-            uintptr_t volatile *currentPointer;
+            uintptr_t currentStack;
             uintptr_t stackEnd;
         };
 
-        void memoryCopy(uintptr_t *sourceAddress, uintptr_t *destinationAddress, uint32_t blockSize);
-        void memoryFill(uintptr_t *sourceAddress, uint32_t blockSize, uint32_t value);
-        void allocateStack(uint32_t stackSize, struct stack_t *processStack);
+        void memoryCopy(uintptr_t sourceAddress, uintptr_t destinationAddress, uint32_t blockSize);
+        void memoryFill(uintptr_t destinationAddress, uint32_t blockSize, uint32_t value);
+        MEMORY_STATUS allocateStack(uint32_t stackSize, struct stack_t *processStack);
     #endif
 
 #endif //MEMORY_H

@@ -4,7 +4,7 @@
     #include "common.h"
 
     #ifdef __ASSEMBLER__
-        .global initSystem
+        .global configureSystem
     #else
         struct CPUID_t {
             uintptr_t revision_r        : 4;

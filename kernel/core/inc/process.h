@@ -17,10 +17,13 @@
             struct process_t *next;
         };
 
-        void initProcessContext(void );
+        #define DUMMY_XPSR          (0x01000000U)
+        #define EXCEPTION_RETURN    (0xFFFFFFFDU)
+
+        void configureProcessContext(void );
         void startProcess(void );
-        uintptr_t * saveContext();
-        void retrieveContext(uintptr_t * pspValue);
+        uintptr_t saveContext();
+        uintptr_t retrieveContext(uintptr_t currentStack);
     #endif
 
 #endif //PROCESS_H

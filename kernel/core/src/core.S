@@ -1,5 +1,5 @@
     .syntax unified
-    .cpu cortex-m4
+    .cpu    cortex-m4
     .fpu softvfp
     .thumb
 
@@ -61,7 +61,7 @@ Reset_Handler:
     mov r2, #BSS_DEFAULT_VALUE
     bl memoryFill
 
-    bl initSystem
+    bl configureSystem
 
     ldr r0, =_ePSP // points to main stack
     bl setPSP
