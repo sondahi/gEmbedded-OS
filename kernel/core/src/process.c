@@ -46,13 +46,8 @@ void configureProcessContext(void ){
 
 }
 
-void startProcess(void ){
-    __asm__ volatile ("svc 0");
-}
-
 void SVC_Handler(void ){
-    if(!ST->STK_CTRL.enable_rw) {
-        currentProcess->processStack.currentAddress = retrieveContext (currentProcess->processStack.currentAddress);
+    if(!ST->STK_CTRL.enable_rw){
         ST->STK_CTRL.enable_rw = HIGH;
     }
 }

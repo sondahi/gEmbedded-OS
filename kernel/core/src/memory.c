@@ -23,7 +23,7 @@ MEMORY_STATUS allocateStack(uint32_t stackSize, struct stack_t *processStack, ui
 
         //memoryCopy ((uintptr_t )&processHandler-1,processStack->end-8,8);
         processStack->currentAddress-=8;
-        processStack->function=processStack->currentAddress;
+        processStack->function=processStack->currentAddress+1;
         memoryCopy (handlerAddress,processStack->currentAddress,8);
         processStack->currentAddress-=4;
         return MEMORY_SUCCESS;

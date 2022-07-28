@@ -20,7 +20,16 @@ retrieveContext:
     bx lr
 
     .section .text
+    .type startProcess, %function
+startProcess:
+    svc 0
+    ldr r0, = 0x2001fbb8
+    bl retrieveContext
+    nop
+    bx lr
+
+    .section .text
     .type processHandler, %function
 processHandler:
-    ldr r0, = 0x08000545
+    ldr r0, = 0x08000535
     blx r0

@@ -43,8 +43,9 @@ void test(void ){
     //createProcess (&process2,runner2,1024);
 
     while (1){
-        pendSV = 0;
+        pendSV+=1;
     }
+
 }
 
 

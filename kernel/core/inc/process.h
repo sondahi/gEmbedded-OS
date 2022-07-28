@@ -8,6 +8,7 @@
         .global startProcess
         .global saveContext
         .global retrieveContext
+        .global startProcess
         .global processHandler
     #else
         struct process_t {
@@ -22,9 +23,9 @@
 
         void configureProcessContext(void );
         void createProcess (struct process_t *,void (* processFunction)(void ), uint32_t stackSize);
-        void startProcess(void );
         uintptr_t saveContext();
         uintptr_t retrieveContext(uintptr_t currentStack);
+        void startProcess(void );
         void processHandler(void );
     #endif
 
