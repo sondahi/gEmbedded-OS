@@ -18,3 +18,9 @@ retrieveContext:
     ldmia r0!, {r4-r11}
     msr psp, r0
     bx lr
+
+    .section .text
+    .type processHandler, %function
+processHandler:
+    ldr r0, = 0x08000545
+    blx r0

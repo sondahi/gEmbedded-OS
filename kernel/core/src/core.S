@@ -68,8 +68,6 @@ Reset_Handler:
 
     bl startProcess
 
-    bl test
-
     LoopReset:
         b LoopReset
 
@@ -77,7 +75,6 @@ Reset_Handler:
     .type Default_Handler, %function
 Default_Handler:
     LoopDefault:
-        nop
         b LoopDefault
 
     .section .vector_table,"a",%progbits

@@ -39,8 +39,8 @@ void runner2(void ){
 
 void test(void ){
 
-    createProcess (&process1,runner1,1024);
-    createProcess (&process2,runner2,1024);
+    //createProcess (&process1,runner1,1024);
+    //createProcess (&process2,runner2,1024);
 
     while (1){
         pendSV = 0;

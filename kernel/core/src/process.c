@@ -10,21 +10,23 @@ extern void test(void );
 void createProcess(struct process_t * process, void (* processFunction)(void ), uint32_t stackSize){
     static uint8_t processId = 0;
 
-    MEMORY_STATUS status = allocateStack (stackSize, &process->processStack);
+    process->processStack.function = (uintptr_t) processFunction;
+
+    MEMORY_STATUS status = allocateStack (stackSize, &process->processStack,((uintptr_t) processHandler)-1);
     if(status != MEMORY_SUCCESS){
         //return status;
         return;
     } else{
         process->processId = ++processId;
-        process->function = (uintptr_t ) processFunction;
-        uintptr_t volatile *stackPointer = (uintptr_t *) process->processStack.currentStack;
+        uintptr_t volatile *stackPointer = (uintptr_t *) process->processStack.currentAddress;
         *stackPointer-- = DUMMY_XPSR;
-        *stackPointer-- = process->function;
+        *stackPointer-- = process->processStack.function;
         *stackPointer = EXCEPTION_RETURN;
-        for (int i = 0; i <13 ; ++i) {
-            * --stackPointer = 0x0;
+        for (int i = 12; i >=0 ; --i) {
+            --stackPointer;
+            * stackPointer = i;
         }
-        process->processStack.currentStack = (uintptr_t ) stackPointer;
+        process->processStack.currentAddress = ((uintptr_t ) stackPointer);
     }
 
     process->next = currentProcess->next;
@@ -36,12 +38,11 @@ void configureProcessContext(void ){
 
     createProcess (&processTest,test,1024);
 
-
     processTest.next = &processTest;
     processTest.previous = &processTest;
     currentProcess = &processTest;
 
-    setPSP (currentProcess->processStack.currentStack);
+    setPSP (currentProcess->processStack.currentAddress);
 
 }
 
@@ -50,8 +51,10 @@ void startProcess(void ){
 }
 
 void SVC_Handler(void ){
-    if(!ST->STK_CTRL.enable_rw)
+    if(!ST->STK_CTRL.enable_rw) {
+        currentProcess->processStack.currentAddress = retrieveContext (currentProcess->processStack.currentAddress);
         ST->STK_CTRL.enable_rw = HIGH;
+    }
 }
 
 void SysTick_Handler(void ){
@@ -59,7 +62,7 @@ void SysTick_Handler(void ){
 }
 
 void PendSV_Handler(void ){
-    currentProcess->processStack.currentStack = saveContext();
+    currentProcess->processStack.currentAddress = saveContext();
     currentProcess = currentProcess->next;
-    currentProcess->processStack.currentStack = retrieveContext (currentProcess->processStack.currentStack);
+    currentProcess->processStack.currentAddress = retrieveContext (currentProcess->processStack.currentAddress);
 }

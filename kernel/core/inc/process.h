@@ -8,10 +8,10 @@
         .global startProcess
         .global saveContext
         .global retrieveContext
+        .global processHandler
     #else
         struct process_t {
             uint8_t processId;
-            uintptr_t function;
             struct stack_t processStack;
             struct process_t *previous;
             struct process_t *next;
@@ -25,6 +25,7 @@
         void startProcess(void );
         uintptr_t saveContext();
         uintptr_t retrieveContext(uintptr_t currentStack);
+        void processHandler(void );
     #endif
 
 #endif //PROCESS_H

@@ -8,7 +8,7 @@ ADD_EXECUTABLE(${PROJECT_NAME})
 
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}.elf")
 
-TARGET_COMPILE_OPTIONS(${PROJECT_NAME} PRIVATE -Wall -mcpu=cortex-m4 -mthumb -std=gnu11 -O3 -ggdb)
+TARGET_COMPILE_OPTIONS(${PROJECT_NAME} PRIVATE -Wall -mcpu=cortex-m4 -mthumb -std=gnu11 -O0 -ggdb)
 
 TARGET_LINK_OPTIONS(${PROJECT_NAME} PRIVATE -Wl,-fuse-ld=mold -nostdlib -T /home/sondahi/Projects/gEmbedded-OS/kernel/config/STM32F411.ld -Wl,-Map=${PROJECT_NAME}.map)
 

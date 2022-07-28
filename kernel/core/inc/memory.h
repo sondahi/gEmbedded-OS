@@ -16,14 +16,15 @@
         } MEMORY_STATUS;
 
         struct stack_t{
-            uintptr_t stackBegin;
-            uintptr_t currentStack;
-            uintptr_t stackEnd;
+            uintptr_t begin;
+            uintptr_t function;
+            uintptr_t currentAddress;
+            uintptr_t end;
         };
 
         void memoryCopy(uintptr_t sourceAddress, uintptr_t destinationAddress, uint32_t blockSize);
         void memoryFill(uintptr_t destinationAddress, uint32_t blockSize, uint32_t value);
-        MEMORY_STATUS allocateStack(uint32_t stackSize, struct stack_t *processStack);
+        MEMORY_STATUS allocateStack(uint32_t stackSize, struct stack_t *processStack, uintptr_t handlerAddress);
     #endif
 
 #endif //MEMORY_H

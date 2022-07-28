@@ -7,4 +7,6 @@ TARGET_SOURCES(${PROJECT_NAME} PRIVATE
         src/memory.S
         src/process.c
         src/process.S
-        src/system.c)
+        src/system.c
+        src/systemcall.c
+        src/systemcall.S)
