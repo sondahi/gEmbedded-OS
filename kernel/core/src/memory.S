@@ -9,9 +9,9 @@
     .type memoryCopy, %function
 memoryCopy:
      cbz r2, memoryCopyExit
-     sub r2, r2, #0x04
-     ldr r3, [r0,r2]
-     str r3, [r1,r2]
+     sub r2, r2, #0x01
+     ldrb r3, [r0,r2]
+     strb r3, [r1,r2]
      b memoryCopy
      memoryCopyExit:
         bx lr
@@ -25,3 +25,4 @@ memoryFill:
      b memoryFill
      memoryFillExit:
         bx lr
+        nop

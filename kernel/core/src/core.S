@@ -15,35 +15,40 @@
 setMode:
     msr control, r0
     bx lr
+    nop
 
     .section .text
     .type setMSP, %function
 setMSP:
     msr msp, r0
     bx lr
+    nop
 
     .section .text
     .type getMSP, %function
 getMSP:
     mrs r0, msp
     bx lr
+    nop
 
     .section .text
     .type setPSP, %function
 setPSP:
     msr psp, r0
     bx lr
+    nop
 
     .section .text
     .type getPSP, %function
 getPSP:
     mrs r0, psp
     bx lr
+    nop
 
     .section .text
     .type Reset_Handler, %function
 Reset_Handler:
-    ldr r0, =_eMSP
+    ldr r0, = END_OF_MSP
     bl setMSP
 
     mov r0, #KERNEL_MODE
@@ -66,16 +71,20 @@ Reset_Handler:
     mov r0, #USER_MODE
     bl setMode
 
-    bl startProcess
-
-    LoopReset:
-        b LoopReset
+    /*
+     * User mode is active
+     * MSP is as planned
+     * PSP is as planned (points to initial process PSP
+     */
+    b startProcess
+    // function must not return here because priority -3. It blocks everthing
 
     .section .text
     .type Default_Handler, %function
 Default_Handler:
     LoopDefault:
         b LoopDefault
+        nop
 
     .section .vector_table,"a",%progbits
     .type Vector_Table, %object

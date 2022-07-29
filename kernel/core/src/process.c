@@ -5,14 +5,12 @@
 static struct process_t *currentProcess = 0;
 
 static struct process_t processTest;
-extern void test(void );
+extern void main(void );
 
 void createProcess(struct process_t * process, void (* processFunction)(void ), uint32_t stackSize){
     static uint8_t processId = 0;
 
-    process->processStack.function = (uintptr_t) processFunction;
-
-    MEMORY_STATUS status = allocateStack (stackSize, &process->processStack,((uintptr_t) processHandler)-1);
+    MEMORY_STATUS status = allocateStack (stackSize, &process->processStack, (uintptr_t) processFunction, ((uintptr_t) processHandler),12); // size must be dynamic
     if(status != MEMORY_SUCCESS){
         //return status;
         return;
@@ -20,7 +18,7 @@ void createProcess(struct process_t * process, void (* processFunction)(void ), 
         process->processId = ++processId;
         uintptr_t volatile *stackPointer = (uintptr_t *) process->processStack.currentAddress;
         *stackPointer-- = DUMMY_XPSR;
-        *stackPointer-- = process->processStack.function;
+        *stackPointer-- = process->processStack.handler;
         *stackPointer = EXCEPTION_RETURN;
         for (int i = 12; i >=0 ; --i) {
             --stackPointer;
@@ -36,7 +34,7 @@ void createProcess(struct process_t * process, void (* processFunction)(void ), 
 
 void configureProcessContext(void ){
 
-    createProcess (&processTest,test,1024);
+    createProcess (&processTest,&main,1024);
 
     processTest.next = &processTest;
     processTest.previous = &processTest;

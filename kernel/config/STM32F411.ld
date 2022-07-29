@@ -6,14 +6,6 @@ MEMORY
     SRAM(rwx)   :ORIGIN =0x20000000,LENGTH =128K
 }
 
-_eMSP = ORIGIN(SRAM) + LENGTH(SRAM);
-_lMSP = 1K;
-_bMSP = _eMSP - _lMSP;
-
-_ePSP = _bMSP;
-_lPSP = 20K;
-_bPSP = _ePSP - _lPSP;
-
 SECTIONS
 {
     .ROM :

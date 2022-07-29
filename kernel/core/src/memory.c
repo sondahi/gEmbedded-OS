@@ -1,15 +1,11 @@
 #include "memory.h"
 
-extern uint32_t _ePSP;
-extern uint32_t _bPSP;
 
-uint32_t static const endOfStack = (uint32_t)&_ePSP;
-uint32_t static currentFrame = endOfStack;
-uint32_t static const beginOfStack = (uint32_t)&_bPSP;
+MEMORY_STATUS allocateStack(uint32_t stackSize, struct stack_t *processStack, uintptr_t processFunction, uintptr_t handlerAddress, uint32_t const handlerSize){
 
-MEMORY_STATUS allocateStack(uint32_t stackSize, struct stack_t *processStack, uintptr_t handlerAddress){
+    uint32_t static currentFrame = END_OF_PSP;
 
-    if((currentFrame - stackSize) < beginOfStack){
+    if((currentFrame - stackSize) < BEGIN_OF_PSP){
         return STACK_UNAVAILABLE;
     } else {
         //create stack
@@ -21,11 +17,17 @@ MEMORY_STATUS allocateStack(uint32_t stackSize, struct stack_t *processStack, ui
 
         //insert handler
 
-        //memoryCopy ((uintptr_t )&processHandler-1,processStack->end-8,8);
-        processStack->currentAddress-=8;
-        processStack->function=processStack->currentAddress+1;
-        memoryCopy (handlerAddress,processStack->currentAddress,8);
+        processStack->currentAddress-=handlerSize;
+        processStack->handler=processStack->currentAddress+1; // +1
+        memoryCopy (handlerAddress-1,processStack->currentAddress,handlerSize);
         processStack->currentAddress-=4;
+
+        // replace function
+
+        uintptr_t volatile *handlerPtr = (uintptr_t *) (processStack->handler-1);
+        handlerPtr++;
+        handlerPtr++;
+        *handlerPtr = processFunction;
         return MEMORY_SUCCESS;
     }
 
