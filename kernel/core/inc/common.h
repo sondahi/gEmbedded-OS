@@ -4,7 +4,10 @@
     #define HIGH    (0X01U)
     #define LOW     (0x00U)
 
-    #ifndef __ASSEMBLER__
+    #ifdef __ASSEMBLER__
+        .equ FUNCTION, 2
+        .equ DATA, 4
+    #else
         #include <stdint.h>
     #endif
 

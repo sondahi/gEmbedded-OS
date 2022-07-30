@@ -18,21 +18,28 @@ char bssChar2;
 
 static struct process_t process1;
 static struct process_t process2;
+static struct process_t process3;
+static struct process_t process4;
 
-int volatile pendSV = 0;
+int volatile sharedData;
+int volatile mainData;
 
 void runner1(void ){
 
+    uint32_t volatile runner1Data;
+
     while (1){
-        ++pendSV ;
+        ++sharedData;
     }
 
 }
 
 void runner2(void ){
 
+    uint32_t volatile runner2Data;
+
     while (1){
-        --pendSV;
+        --sharedData;
     }
 
 }
@@ -41,9 +48,10 @@ void main(void ){
 
     createProcess (&process1,runner1,1024);
     createProcess (&process2,runner2,1024);
+    //createProcess (&process3,runner1,1024);
+    //createProcess (&process4,runner2,1024);
 
     while (1){
-        pendSV = 0 ;
     }
 
 }

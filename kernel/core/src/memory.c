@@ -1,6 +1,5 @@
 #include "memory.h"
 
-
 MEMORY_STATUS allocateStack(uint32_t stackSize, struct stack_t *processStack, uintptr_t processFunction, uintptr_t handlerAddress, uint32_t const handlerSize){
 
     uint32_t static currentFrame = END_OF_PSP;

@@ -5,7 +5,6 @@
     #include "memory.h"
 
     #ifdef __ASSEMBLER__
-        .global startProcess
         .global saveContext
         .global retrieveContext
         .global startProcess

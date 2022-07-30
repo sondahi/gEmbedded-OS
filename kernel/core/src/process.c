@@ -44,13 +44,9 @@ void configureProcessContext(void ){
 
 }
 
-void SVC_Handler(void ){
-    if(!ST->STK_CTRL.enable_rw){
-        ST->STK_CTRL.enable_rw = HIGH;
-    }
-}
 
 void SysTick_Handler(void ){
+    //currentProcess = currentProcess->next;
     SCB->ICSR.pendingSVSet_rw = HIGH;
 }
 
