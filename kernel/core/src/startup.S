@@ -37,17 +37,4 @@ Reset_Handler:
     bl setMode
 
     b startProcessContext
-
-    /*
-     * User mode is active
-     * MSP is as planned
-     * PSP is as planned (points to initial process PSP
-     */
-    //b run
-
-    //pop {r0-r12, lr} //till lr everthing is successful
-    // now pc must to point init process stack of function pointer which is thumb set#
-    //svc 0 // stacking and unstacking in inital proccss stack but does not affect dumy settings +
-    //pop {pc}
-    //nop
     .align FUNCTION

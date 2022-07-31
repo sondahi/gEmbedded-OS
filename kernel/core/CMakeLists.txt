@@ -10,4 +10,5 @@ TARGET_SOURCES(${PROJECT_NAME} PRIVATE
         src/startup.S
         src/system.c
         src/system.S
+        src/systemcall.S
         src/vectors.S)

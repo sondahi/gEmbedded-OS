@@ -1,5 +1,5 @@
-#include "system.h"
 #include "exception.h"
+#include "system.h"
 
 void configureExceptions(void ){
     SCB->SHCSR.usgFaultEna_rw   = HIGH;

@@ -149,6 +149,8 @@
         #define SCB ((volatile struct SCB_t *)  (0xE000ED00))
         #define ST ((volatile struct ST_t *)    (0xE000E010))
 
+    void configureSystem(void );
+
     #endif
 
 #endif //SYSTEM_H
