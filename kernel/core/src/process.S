@@ -3,6 +3,9 @@
     .thumb
 
     #include "process.h"
+    #include "systemcall.h"
+
+    .global processHandler
 
     .section .text
     .type saveContext, %function
@@ -21,15 +24,17 @@ retrieveContext:
     .align FUNCTION
 
     .section .text
-    .type startProcess, %function
-startProcess:
-    pop {r0-r12, lr} //till lr everthing is successful
-    // now pc must to point init process stack of function pointer which is thumb set#
-    svc 0 // stacking and unstacking in inital proccss stack but does not affect dumy settings +
+    .type startProcessContext, %function
+startProcessContext:
+    svc INIT_TIMER
+    pop {r0-r12, lr}
     pop {pc}
-    // default status
-    //bx r0
     .align FUNCTION
+
+    // //till lr everthing is successful
+    // now pc must to point init process stack of function pointer which is thumb set#
+    //svc 0 // stacking and unstacking in inital proccss stack but does not affect dumy settings +
+    //
 
     // handler prototype. being copied to sram stack to execute process function
     .section .text

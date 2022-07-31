@@ -52,7 +52,9 @@ void main(void ){
     //createProcess (&process4,runner2,1024);
 
     while (1){
+        sharedData=0;
     }
+    //sharedData++;
 
 }
 

@@ -2,10 +2,11 @@
 #include "system.h"
 #include "core.h"
 
-static struct process_t *currentProcess = 0;
-
-static struct process_t processTest;
 extern void main(void );
+extern void processHandler(void );
+
+static struct process_t procesMain;
+static struct process_t *currentProcess = 0;
 
 void createProcess(struct process_t * process, void (* processFunction)(void ), uint32_t stackSize){
     static uint8_t processId = 0;
@@ -34,19 +35,17 @@ void createProcess(struct process_t * process, void (* processFunction)(void ), 
 
 void configureProcessContext(void ){
 
-    createProcess (&processTest,&main,1024);
+    createProcess (&procesMain,&main,1024);
 
-    processTest.next = &processTest;
-    processTest.previous = &processTest;
-    currentProcess = &processTest;
+    procesMain.next = &procesMain;
+    procesMain.previous = &procesMain;
+    currentProcess = &procesMain;
 
     setPSP (currentProcess->processStack.currentAddress);
 
 }
 
-
 void SysTick_Handler(void ){
-    //currentProcess = currentProcess->next;
     SCB->ICSR.pendingSVSet_rw = HIGH;
 }
 

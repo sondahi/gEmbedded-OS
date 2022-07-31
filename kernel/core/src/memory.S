@@ -21,8 +21,8 @@ memoryCopy:
     .type memoryFill, %function
 memoryFill:
      cbz r1, memoryFillExit
-     sub r1, r1, #0x04
-     str r2, [r0,r1]
+     sub r1, r1, #0x01
+     strb r2, [r0,r1]
      b memoryFill
      memoryFillExit:
         bx lr

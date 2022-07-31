@@ -7,8 +7,7 @@
     #ifdef __ASSEMBLER__
         .global saveContext
         .global retrieveContext
-        .global startProcess
-        .global processHandler
+        .global startProcessContext
     #else
         struct process_t {
             uint8_t processId;
@@ -24,8 +23,7 @@
         void createProcess (struct process_t *,void (* processFunction)(void ), uint32_t stackSize);
         uintptr_t saveContext();
         uintptr_t retrieveContext(uintptr_t currentStack);
-        void startProcess(void );
-        void processHandler(void );
+        void startProcessContext(void );
     #endif
 
 #endif //PROCESS_H

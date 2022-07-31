@@ -9,6 +9,5 @@ TARGET_SOURCES(${PROJECT_NAME} PRIVATE
         src/process.S
         src/startup.S
         src/system.c
-        src/systemcall.c
-        src/systemcall.S
+        src/system.S
         src/vectors.S)
