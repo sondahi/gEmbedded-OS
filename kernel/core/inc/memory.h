@@ -23,15 +23,21 @@
         } MEMORY_STATUS;
 
         struct stack_t{
-            uintptr_t begin;
-            uintptr_t handler;
-            uintptr_t currentAddress;
-            uintptr_t end;
+            uint32_t size;
+            uint32_t end;
+            uintptr_t volatile * current;
+            uint32_t begin;
+            uint32_t handlerAddress;
+            uint8_t handlerSize;
+            uint32_t functionAddress;
         };
 
-        void memoryCopy(uintptr_t sourceAddress, uintptr_t destinationAddress, uint32_t blockSize);
-        void memoryFill(uintptr_t destinationAddress, uint32_t blockSize, uint32_t value);
-        MEMORY_STATUS allocateStack(uint32_t stackSize, struct stack_t *processStack, uintptr_t processFunction, uintptr_t handlerAddress, uint32_t handlerSize);
+        void memoryCopy(uint32_t sourceAddress, uint32_t destinationAddress, uint32_t blockSize);
+        void memoryFill(uint32_t destinationAddress, uint32_t blockSize, uint32_t value);
+        MEMORY_STATUS allocateStack(struct stack_t *stack);
+
+        #define DUMMY_XPSR          (0x01000000U)
+
     #endif
 
 #endif //MEMORY_H

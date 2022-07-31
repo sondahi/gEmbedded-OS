@@ -5,10 +5,15 @@
     #define LOW     (0x00U)
 
     #ifdef __ASSEMBLER__
-        .equ FUNCTION, 2
-        .equ DATA, 4
+
+        .equ FUNCTION_ALIGNMENT, 2
+        .equ DATA_WORD_ALIGNMENT, 4
+
     #else
+
         #include <stdint.h>
+        typedef void (* voidFunctionPointer)(void );
+
     #endif
 
 #endif //COMMON_H

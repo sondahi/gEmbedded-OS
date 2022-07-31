@@ -1,32 +1,35 @@
 #include "memory.h"
+#include "exception.h"
 
-MEMORY_STATUS allocateStack(uint32_t stackSize, struct stack_t *processStack, uintptr_t processFunction, uintptr_t handlerAddress, uint32_t const handlerSize){
+MEMORY_STATUS allocateStack(struct stack_t *stack){
 
     uint32_t static currentFrame = END_OF_PSP;
 
-    if((currentFrame - stackSize) < BEGIN_OF_PSP){
+    if((currentFrame - stack->size) < BEGIN_OF_PSP){
         return STACK_UNAVAILABLE;
     } else {
         //create stack
-        processStack->end = currentFrame;
-        processStack->currentAddress = currentFrame;
-        currentFrame-=stackSize;
-        processStack->begin = currentFrame;
+        stack->end = currentFrame;
+        stack->current = (uintptr_t *)stack->end;
+        currentFrame-=stack->size;
+        stack->begin = currentFrame;
         currentFrame-=4; // dont touch
 
         //insert handler
-
-        processStack->currentAddress-=handlerSize;
-        processStack->handler=processStack->currentAddress+1; // +1
-        memoryCopy (handlerAddress-1,processStack->currentAddress,handlerSize);
-        processStack->currentAddress-=4;
-
+        stack->current-=2;
+        memoryCopy (stack->handlerAddress-1, (uint32_t) stack->current, stack->handlerSize);
+        stack->handlerAddress = ((uint32_t) stack->current)+1; // change address to sram
         // replace function
+        *(stack->current+2) = stack->functionAddress;
 
-        uintptr_t volatile *handlerPtr = (uintptr_t *) (processStack->handler-1);
-        handlerPtr++;
-        handlerPtr++;
-        *handlerPtr = processFunction;
+        // fill stack entry
+        *--stack->current = DUMMY_XPSR;
+        *--stack->current = stack->handlerAddress;
+        *--stack->current = THREAD_NOFPU_PSP;
+        for (int i = 12; i >=0 ; --i) {
+            *--stack->current = i;
+        }
+
         return MEMORY_SUCCESS;
     }
 

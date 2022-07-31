@@ -37,4 +37,4 @@ Reset_Handler:
     bl setMode
 
     b startProcessContext
-    .align FUNCTION
+    .align FUNCTION_ALIGNMENT

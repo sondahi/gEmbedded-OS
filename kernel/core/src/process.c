@@ -1,31 +1,28 @@
 #include "process.h"
 #include "system.h"
 #include "core.h"
+#include "exception.h"
 
 extern void main(void );
 extern void processHandler(void );
 
-static struct process_t procesMain;
+static struct process_t processMain;
 static struct process_t *currentProcess = 0;
 
-void createProcess(struct process_t * process, void (* processFunction)(void ), uint32_t stackSize){
-    static uint8_t processId = 0;
+void createProcess(uint32_t stackSize, struct process_t *process, voidFunctionPointer handlerFunction, uint8_t handlerSize, voidFunctionPointer function){
+    static uint8_t currentId = 0;
 
-    MEMORY_STATUS status = allocateStack (stackSize, &process->processStack, (uintptr_t) processFunction, ((uintptr_t) processHandler),12); // size must be dynamic
+    process->stack.size = stackSize;
+    process->stack.handlerAddress = (uint32_t) handlerFunction;
+    process->stack.handlerSize = handlerSize;
+    process->stack.functionAddress = (uint32_t) function;
+
+    MEMORY_STATUS status = allocateStack (&process->stack); // size must be dynamic
     if(status != MEMORY_SUCCESS){
         //return status;
         return;
     } else{
-        process->processId = ++processId;
-        uintptr_t volatile *stackPointer = (uintptr_t *) process->processStack.currentAddress;
-        *stackPointer-- = DUMMY_XPSR;
-        *stackPointer-- = process->processStack.handler;
-        *stackPointer = EXCEPTION_RETURN;
-        for (int i = 12; i >=0 ; --i) {
-            --stackPointer;
-            * stackPointer = i;
-        }
-        process->processStack.currentAddress = ((uintptr_t ) stackPointer);
+        process->id = ++currentId;
     }
 
     process->next = currentProcess->next;
@@ -35,13 +32,13 @@ void createProcess(struct process_t * process, void (* processFunction)(void ), 
 
 void configureProcessContext(void ){
 
-    createProcess (&procesMain,&main,1024);
+    createProcess (1024,&processMain,&processHandler,12,&main);
 
-    procesMain.next = &procesMain;
-    procesMain.previous = &procesMain;
-    currentProcess = &procesMain;
+    processMain.next = &processMain;
+    processMain.previous = &processMain;
+    currentProcess = &processMain;
 
-    setPSP (currentProcess->processStack.currentAddress);
+    setPSP ((uint32_t) currentProcess->stack.current);
 
 }
 
@@ -50,7 +47,7 @@ void SysTick_Handler(void ){
 }
 
 void PendSV_Handler(void ){
-    currentProcess->processStack.currentAddress = saveContext();
+    currentProcess->stack.current = (uintptr_t *) saveContext ();
     currentProcess = currentProcess->next;
-    currentProcess->processStack.currentAddress = retrieveContext (currentProcess->processStack.currentAddress);
+    currentProcess->stack.current = (uintptr_t *) retrieveContext ((uintptr_t) currentProcess->stack.current);
 }

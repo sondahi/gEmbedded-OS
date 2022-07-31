@@ -15,7 +15,7 @@ memoryCopy:
      b memoryCopy
      memoryCopyExit:
         bx lr
-    .align FUNCTION
+    .align FUNCTION_ALIGNMENT
 
     .section .text
     .type memoryFill, %function
@@ -26,4 +26,4 @@ memoryFill:
      b memoryFill
      memoryFillExit:
         bx lr
-    .align FUNCTION
+    .align FUNCTION_ALIGNMENT

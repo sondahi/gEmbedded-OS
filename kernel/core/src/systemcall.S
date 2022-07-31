@@ -18,4 +18,4 @@ SVC_Handler:
     bic r2, r2, #0xFF00
     cmp r2, INIT_TIMER
     beq startTimer
-    .align FUNCTION
+    .align FUNCTION_ALIGNMENT
